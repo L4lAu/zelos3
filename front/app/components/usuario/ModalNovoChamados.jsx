@@ -21,35 +21,35 @@ export default function ModalNovoChamado({ isOpen, onClose, onCreate, error }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.79)] flex items-center justify-center z-50 p-4">
+      <div className="bg-[linear-gradient(10deg,#1e2128,#282c34)] p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-xl font-bold text-red-600 mb-4">Novo Chamado</h2>
         
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Número de Patrimônio</label>
+          <label className="block text-withe mb-2">Número de Patrimônio</label>
           <input
             type="text"
             placeholder="Digite o número de patrimônio"
             value={novoChamado.patrimonio}
             onChange={e => setNovoChamado({...novoChamado, patrimonio: e.target.value})}
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full p-2 border border-withe rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
         
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Tipo de Chamado</label>
+          <label className="block text-withe mb-2">Tipo de Chamado</label>
           <select
             value={novoChamado.tipo}
             onChange={e => setNovoChamado({...novoChamado, tipo: e.target.value})}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           >
-            <option value="Manutenção">Manutenção</option>
+            <option value="Manutenção" >Manutenção</option>
             <option value="Apoio Técnico">Apoio Técnico</option>
           </select>
         </div>
         
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Descrição do Problema *</label>
+          <label className="block text-withe mb-2">Descrição do Problema *</label>
           <textarea
             placeholder="Descreva o problema em detalhes"
             value={novoChamado.descricaoProblema}
