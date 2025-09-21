@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from "react";
+import AnimatedBackground from "./components/animations/Objetos";
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -17,6 +18,7 @@ const LoginPage = () => {
     }
 
     try {
+      // Substitua pela URL do seu backend
       const response = await fetch('http://localhost:3001/auth/local', {
         method: 'POST',
         headers: {
@@ -31,6 +33,7 @@ const LoginPage = () => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
 
+        // Redirecionamento baseado na role
         switch (data.user.role) {
           case 'admin':
             window.location.href = '/admin';
@@ -53,22 +56,48 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
+
+    <div
+      className="flex flex-col min-h-screen text-white bg-fixed"
+      style={{ background: 'linear-gradient(150deg, #000000, #1e2128, #282c34)' }}
+    >
+      <AnimatedBackground numberOfPoints={40} />
+
+      {/* Header */}
       <header>
-        <div>
-          <strong>SENAI</strong> | CHAMADOS ONLINE
+        <div className="container mx-auto px-8 py-6 text-left text-2xl tracking-wide">
+          <strong
+            className="text-red-500 font-bold"
+            style={{ textShadow: '0 0 8px rgba(239, 68, 68, 0.7)' }}
+          >
+            SENAI
+          </strong> | CHAMADOS ONLINE
         </div>
       </header>
 
-      <main>
-        <form onSubmit={handleLogin}>
-          <h2>Login</h2>
-          <p>Bem-vindo(a) ao Portal Online SENAI-SP!</p>
+      {/* Conteúdo Principal */}
+      <main className="flex-grow flex items-center justify-center p-6">
 
-          {erro && <p>{erro}</p>}
+        {/* Formulário (Card) */}
+        <form
+          onSubmit={handleLogin}
+          className="w-full max-w-md bg-[rgba(0,0,0,0.4)] p-12 rounded-xl shadow-2xl border border-[rgb(17,17,27)] backdrop-blur-sm"
+        >
+          <h2 className="text-3xl font-bold mb-2 text-center text-red-500">Login</h2>
+          <p className="text-center text-slate-400 mb-14">Bem-vindo(a) ao Portal Online SENAI-SP!</p>
 
-          <div>
-            <label htmlFor="username">Usuário</label>
+          {/* Mensagem de Erro */}
+          {erro && (
+            <div className="bg-red-900/30 border border-red-700 text-red-200 text-sm text-center p-3 rounded-md mb-6">
+              {erro}
+            </div>
+          )}
+
+          {/* Campo Usuário */}
+          <div className="mb-5">
+            <label htmlFor="username" className="block text-slate-300 text-sm font-medium mb-2">
+              Usuário (RA)
+            </label>
             <input
               type="text"
               id="username"
@@ -76,11 +105,15 @@ const LoginPage = () => {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Insira seu RA"
               required
+              className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-md text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200"
             />
           </div>
 
-          <div>
-            <label htmlFor="password">Senha</label>
+          {/* Campo Senha */}
+          <div className="mb-8">
+            <label htmlFor="password" className="block text-slate-300 text-sm font-medium mb-2">
+              Senha
+            </label>
             <input
               type="password"
               id="password"
@@ -89,15 +122,23 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Digite sua senha"
               required
+              className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-md text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200"
             />
           </div>
 
-          <button type="submit">Avançar</button>
+          {/* Botão de Envio */}
+          <button
+            type="submit"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-4 focus:ring-red-500/50 transition duration-300 transform hover:-translate-y-1"
+          >
+            Avançar
+          </button>
         </form>
       </main>
 
-      <footer>
-        © SENAI-SP - 2025
+      {/* Footer: Fundo transparente */}
+      <footer className="py-4 text-center text-slate-500 text-sm">
+        © SENAI-SP - {new Date().getFullYear()}
       </footer>
     </div>
   );
