@@ -59,16 +59,15 @@ const LoginPage = () => {
 
     <div
       className="flex flex-col min-h-screen text-white bg-fixed"
-      style={{ background: 'linear-gradient(150deg, #000000, #1e2128, #282c34)' }}
     >
+
       <AnimatedBackground numberOfPoints={40} />
 
       {/* Header */}
       <header>
         <div className="container mx-auto px-8 py-6 text-left text-2xl tracking-wide">
           <strong
-            className="text-red-500 font-bold"
-            style={{ textShadow: '0 0 8px rgba(239, 68, 68, 0.7)' }}
+            className="text-red-500 font-bold shadow-[rbg(239,68,68, 0.7)]"
           >
             SENAI
           </strong> | CHAMADOS ONLINE
