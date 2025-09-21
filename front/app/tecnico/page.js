@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 // Componentes
@@ -28,7 +27,7 @@ export default function TecnicoPage() {
       try {
         setLoading(true);
 
-        const token = Cookies.get("token");
+        const token = localStorage.get("token");
         if (!token) {
           router.push(`/`);
           console.error("Token não encontrado. Redirecionar para login.");
@@ -36,7 +35,7 @@ export default function TecnicoPage() {
         }
 
         // Buscar usuário autenticado
-        const userRes = await fetch("http://localhost:8080/auth/me", {
+        const userRes = await fetch("http://localhost:3001/", {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
