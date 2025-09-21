@@ -6,7 +6,7 @@ export default function Header({ user, onLogout }) {
 
   return (
     // Aplicando o gradiente linear ao fundo do header
-    <header className="bg-[linear-gradient(150deg,#000000,#1e2128,#282c34)] shadow-lg">
+    <header className="bg-[linear-gradient(120deg,#000000,#1e2128,#282c34)] shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo / Título */}
