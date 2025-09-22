@@ -130,7 +130,6 @@ export default function TecnicoPage() {
   return (
     // Fundo base escuro e cor de texto padrão clara para toda a aplicação
     <div className="min-h-screen bg-[#282c34] text-gray-300 flex flex-col">
-      {/* O Header já foi estilizado anteriormente */}
       {user && (
         <Header
           user={user}
