@@ -1,9 +1,7 @@
 // pages/ChamadosAdm.jsx
 "use client";
 import React, { useState, useEffect } from "react";
-import "./admin.css";
-import Sidebar from "../components/layout/sidebar_admin/Sidebar";
-import Footer from "../components/layout/footer/Footer";
+import Sidebar from "../components/Sidebar";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { verificaPermissao } from "../../utils/auth";
 
@@ -14,11 +12,9 @@ export default function ChamadosAdm() {
   const [modalMode, setModalMode] = useState("details");
   const [currentChamado, setCurrentChamado] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [chamadoToDelete, setChamadoToDelete] = useState(null);
   const [isReadyToDelete, setIsReadyToDelete] = useState(false);
-
   const MAX_ASSUNTO_LENGTH = 50;
 
   // 🔹 Buscar chamados do backend

@@ -26,30 +26,30 @@ export default function ModalNovoChamado({ isOpen, onClose, onCreate, error }) {
         <h2 className="text-xl font-bold text-red-600 mb-4">Novo Chamado</h2>
         
         <div className="mb-4">
-          <label className="block text-withe mb-2">Número de Patrimônio</label>
+          <label className="block text-white mb-2">Número de Patrimônio</label>
           <input
             type="text"
             placeholder="Digite o número de patrimônio"
             value={novoChamado.patrimonio}
             onChange={e => setNovoChamado({...novoChamado, patrimonio: e.target.value})}
-            className="w-full p-2 border border-withe rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full p-2 border border-white rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
         
         <div className="mb-4">
-          <label className="block text-withe mb-2">Tipo de Chamado</label>
+          <label className="block text-white mb-2">Tipo de Chamado</label>
           <select
             value={novoChamado.tipo}
             onChange={e => setNovoChamado({...novoChamado, tipo: e.target.value})}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           >
-            <option value="Manutenção" >Manutenção</option>
+            <option value="Manutenção">Manutenção</option>
             <option value="Apoio Técnico">Apoio Técnico</option>
           </select>
         </div>
         
         <div className="mb-4">
-          <label className="block text-withe mb-2">Descrição do Problema *</label>
+          <label className="block text-white mb-2">Descrição do Problema *</label>
           <textarea
             placeholder="Descreva o problema em detalhes"
             value={novoChamado.descricaoProblema}
