@@ -10,14 +10,13 @@ const listarChamado = async () => {
   }
 };
 
-
 const obterChamadoPorId = async (id) => {
   try {
     if (isNaN(id) || id <= 0) {
       throw new Error('ID inválido. Deve ser um número positivo.');
     }
-    const where = `id = ?`; // Define a condição
-    const result = await read('chamados', where, [id]); // Passa a tabela, a condição e os parâmetros
+    const where = `id = ?`;
+    const result = await read('chamados', where, [id]);
     return result;
   } catch (error) {
     console.error('Erro ao obter o chamado por ID:', error);
@@ -28,7 +27,7 @@ const obterChamadoPorId = async (id) => {
 const criarChamado = async (ChamadoData) => {
   try {
     await create('chamados', ChamadoData);
-    return ("Chamado criado com sucesso!")
+    return ("Chamado criado com sucesso!");
   } catch (error) {
     console.error('Erro ao criar chamado:', error);
     throw error;
@@ -44,20 +43,18 @@ const atualizarChamado = async (id, ChamadoData) => {
     const values = Object.values(ChamadoData);
     const query = `UPDATE chamados SET ${fields} WHERE id = ?`;
     const result = update(query, [...values, id]);
-    return result.affectedRows
+    return result.affectedRows;
   } catch (error) {
     console.error('Erro ao atualizar o chamado:', error);
     throw error;
   }
 };
 
-
-
 const excluirChamado = async (id) => {
   try {
-    return await deleteRecord('chamados', `id = ${id}`)
+    return await deleteRecord('chamados', `id = ${id}`);
   } catch (error) {
-    console.error('Erro ao excluir o cd ..', error)
+    console.error('Erro ao excluir o chamado:', error);
   }
 };
 
