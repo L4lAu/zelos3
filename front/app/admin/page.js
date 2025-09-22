@@ -26,7 +26,7 @@ export default function ChamadosAdm() {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3001/chamados", {
+        const response = await fetch("http://localhost:3001/pool", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error("Erro ao carregar chamados");
