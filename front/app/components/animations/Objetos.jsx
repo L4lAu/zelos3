@@ -13,7 +13,7 @@ const AnimatedBackground = ({ numberOfPoints = 40 }) => {
 
   useEffect(() => {
     const generatedPoints = [...Array(numberOfPoints)].map((_, i) => {
-      const duration = 5 + Math.random() * 10;
+      const duration = 5 + Math.random() * 100;
       const delay = Math.random() * 5;
 
       return {
@@ -28,7 +28,7 @@ const AnimatedBackground = ({ numberOfPoints = 40 }) => {
           repeat: Infinity,
           ease: 'easeInOut',
         },
-        className: `absolute rounded-full ${i % 4 === 0 ? 'bg-slate-600' : 'bg-red-500/70'}`,
+        className: `absolute rounded-full ${i % 4 === 0 ? 'bg-slate-600' : 'bg-red-500'}`,
         style: {
           left: `${Math.random() * 100}%`,
           top: `${Math.random() * 100}%`,

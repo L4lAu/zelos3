@@ -2,6 +2,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
+<<<<<<< HEAD
+=======
+import Header from "../components/Header";
+>>>>>>> 090607354afa2be5d1834fefe7bdb5bcc5c51758
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { verificaPermissao } from "../../utils/auth";
 
@@ -12,6 +16,11 @@ export default function ChamadosAdm() {
   const [modalMode, setModalMode] = useState("details");
   const [currentChamado, setCurrentChamado] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+<<<<<<< HEAD
+=======
+  const [user, setUser] = useState({});
+
+>>>>>>> 090607354afa2be5d1834fefe7bdb5bcc5c51758
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [chamadoToDelete, setChamadoToDelete] = useState(null);
   const [isReadyToDelete, setIsReadyToDelete] = useState(false);
@@ -166,127 +175,163 @@ export default function ChamadosAdm() {
     if (status === "Concluído") return "concluido";
     return "";
   };
+   const handleLogout = () => {
+    localStorage.removeItem("user"); // remove usuário do localStorage
+    setUser(null);
+    router.push("/login"); // redireciona para página de login
+  };
 
   return (
-    <div className="admin-layout-container">
-      <Sidebar />
-      <main className="main-content-area">
-        <motion.div className="page-wrapper" onMouseMove={handleMouseMove}>
-          <div className="content-wrapper">
-            <div className="admin-container">
-              <div className="admin-header">
-                <h1>Painel Administrativo</h1>
-              </div>
+     <div className="min-h-screen bg-[#282c34] text-gray-300 flex flex-col">
+    {/* Header fixo */}
+    <Header user={user} onLogout={handleLogout} />
 
-              {loading ? (
-                <p>Carregando chamados...</p>
-              ) : (
-                <>
-                  <div className="stats-container">
-                    <div className="stat-card total">
-                      <h4>Total de Chamados</h4>
-                      <p>{stats.total}</p>
-                    </div>
-                    <div className="stat-card aberto">
-                      <h4>Abertos</h4>
-                      <p>{stats.abertos}</p>
-                    </div>
-                    <div className="stat-card em-andamento">
-                      <h4>Em Andamento</h4>
-                      <p>{stats.emAndamento}</p>
-                    </div>
-                    <div className="stat-card concluido">
-                      <h4>Concluídos</h4>
-                      <p>{stats.concluidos}</p>
-                    </div>
-                  </div>
+    <div className="flex flex-1 overflow-hidden">
+      {/* Sidebar */}
+      <Sidebar activePage="chamados-adm" userType="admin" />
 
-                  <div className="controls-container">
-                    <input
-                      type="search"
-                      placeholder="🔎 Buscar por protocolo, assunto, status..."
-                      className="search-bar"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <button
-                      className="btn-create"
-                      onClick={() => handleOpenModal("create")}
-                    >
-                      Criar Novo Chamado
-                    </button>
-                  </div>
+      {/* Conteúdo Principal */}
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        {/* Título */}
+        <div className="mb-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-100">
+              Painel Administrativo
+            </h1>
+            <p className="text-gray-400 text-sm sm:text-base">
+              Gerencie todos os chamados do sistema
+            </p>
+          </div>
+          <button
+            onClick={() => handleOpenModal("create")}
+            className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors duration-200 text-sm sm:text-base shadow-md"
+          >
+            Criar Novo Chamado
+          </button>
+        </div>
 
-                  <div className="chamados-list-container">
-                    <div className="chamados-list-header">
-                      <div className="col-protocolo">Protocolo</div>
-                      <div className="col-assunto">Assunto</div>
-                      <div className="col-data">Data</div>
-                      <div className="col-status">Status</div>
-                      <div className="col-acoes">Ações</div>
-                    </div>
+        {/* Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="bg-[#1e2128] border border-black/30 p-4 rounded-lg shadow text-center">
+            <h4 className="text-gray-400 text-sm">Total de Chamados</h4>
+            <p className="text-2xl font-bold text-gray-100">{stats.total}</p>
+          </div>
+          <div className="bg-[#1e2128] border border-black/30 p-4 rounded-lg shadow text-center">
+            <h4 className="text-gray-400 text-sm">Abertos</h4>
+            <p className="text-2xl font-bold text-red-400">{stats.abertos}</p>
+          </div>
+          <div className="bg-[#1e2128] border border-black/30 p-4 rounded-lg shadow text-center">
+            <h4 className="text-gray-400 text-sm">Em Andamento</h4>
+            <p className="text-2xl font-bold text-yellow-400">{stats.emAndamento}</p>
+          </div>
+          <div className="bg-[#1e2128] border border-black/30 p-4 rounded-lg shadow text-center">
+            <h4 className="text-gray-400 text-sm">Concluídos</h4>
+            <p className="text-2xl font-bold text-green-400">{stats.concluidos}</p>
+          </div>
+        </div>
 
-                    {filteredChamados.map((c) => (
-                      <div key={c.id} className="chamado-list-item">
-                        <div className="col-protocolo">{c.protocolo}</div>
-                        <div className="col-assunto">
-                          {c.assunto?.length > MAX_ASSUNTO_LENGTH ? (
-                            <span>
-                              {`${c.assunto.substring(
-                                0,
-                                MAX_ASSUNTO_LENGTH
-                              )}...`}
-                              <span
-                                className="ver-mais-text"
-                                onClick={() => handleOpenModal("details", c)}
-                              >
-                                Ver mais...
-                              </span>
-                            </span>
-                          ) : (
-                            c.assunto
-                          )}
-                        </div>
-                        <div className="col-data">{c.data}</div>
-                        <div className="col-status">
-                          <span
-                            className={`status-badge ${getStatusClass(
-                              c.status
-                            )}`}
-                          >
-                            {c.status}
-                          </span>
-                        </div>
-                        <div className="col-acoes">
+        {/* Barra de busca */}
+        <div className="bg-[#1e2128] border border-black/30 p-4 rounded-lg shadow mb-6 flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+          <input
+            type="text"
+            placeholder="🔎 Buscar por protocolo, assunto, status..."
+            className="w-full lg:flex-1 p-2 bg-[#282c34] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-sm sm:text-base placeholder-gray-400"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button
+            onClick={() => handleOpenModal("create")}
+            className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors duration-200 text-sm sm:text-base shadow-md w-full lg:w-auto"
+          >
+            Novo Chamado
+          </button>
+        </div>
+
+        {/* Lista de chamados */}
+        {loading ? (
+          <div className="bg-[#1e2128] p-6 sm:p-8 rounded-lg shadow-xl text-center border border-black/30">
+            <p className="text-gray-300 font-semibold text-sm sm:text-base">
+              Carregando chamados...
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto bg-[#1e2128] p-4 rounded-lg shadow-xl border border-black/30">
+            <table className="w-full text-left border-collapse">
+              <thead className="text-gray-400 text-sm">
+                <tr>
+                  <th className="pb-3">Protocolo</th>
+                  <th className="pb-3">Assunto</th>
+                  <th className="pb-3">Data</th>
+                  <th className="pb-3">Status</th>
+                  <th className="pb-3 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-300 text-sm sm:text-base">
+                {filteredChamados.map((c) => (
+                  <tr
+                    key={c.id}
+                    className="border-t border-gray-700 hover:bg-[#2f333d] transition"
+                  >
+                    <td className="py-2">{c.protocolo}</td>
+                    <td className="py-2">
+                      {c.assunto?.length > MAX_ASSUNTO_LENGTH ? (
+                        <>
+                          {c.assunto.substring(0, MAX_ASSUNTO_LENGTH)}...
                           <button
-                            className="btn-action details"
+                            className="text-blue-400 hover:underline ml-1"
                             onClick={() => handleOpenModal("details", c)}
                           >
-                            Ver
+                            Ver mais
                           </button>
-                          <button
-                            className="btn-action edit"
-                            onClick={() => handleOpenModal("edit", c)}
-                          >
-                            Editar
-                          </button>
-                          <button
-                            className="btn-action delete"
-                            onClick={() => openDeleteConfirm(c)}
-                          >
-                            Deletar
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
+                        </>
+                      ) : (
+                        c.assunto
+                      )}
+                    </td>
+                    <td className="py-2">{c.data}</td>
+                    <td className="py-2">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          c.status === "Aberto"
+                            ? "bg-red-500/20 text-red-400"
+                            : c.status === "Em Andamento"
+                            ? "bg-yellow-500/20 text-yellow-400"
+                            : c.status === "Concluído"
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-gray-500/20 text-gray-400"
+                        }`}
+                      >
+                        {c.status}
+                      </span>
+                    </td>
+                    <td className="py-2 flex gap-2 justify-end">
+                      <button
+                        className="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs"
+                        onClick={() => handleOpenModal("details", c)}
+                      >
+                        Ver
+                      </button>
+                      <button
+                        className="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs"
+                        onClick={() => handleOpenModal("edit", c)}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-xs"
+                        onClick={() => openDeleteConfirm(c)}
+                      >
+                        Deletar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </motion.div>
-        <Footer />
+        )}
       </main>
     </div>
+  </div>
   );
 }

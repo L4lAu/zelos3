@@ -17,7 +17,9 @@ export default function Sidebar({ activePage, userType, onNavigate }) {
 
   return (
     <>
-      {/* Botão hamburguer mobile */}
+      {/* Botão hamburguer mobile */
+      
+      }
       <button
         onClick={() => setIsOpen(!isOpen)}
         // Fundo escuro para combinar com o header, com uma leve sombra
