@@ -114,7 +114,7 @@ export default function TecnicoPage() {
     );
   }
 
-  // --- Caso usuário não exista ---
+  // Caso usuário não exista
   if (!user) {
     return (
       // Fundo escuro e mensagem de erro clara
