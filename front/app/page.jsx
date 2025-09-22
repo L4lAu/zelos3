@@ -19,7 +19,7 @@ const LoginPage = () => {
 
     try {
       // Substitua pela URL do seu backend
-      const response = await fetch('http://localhost:3001/auth/local', {
+      const response = await fetch('http://localhost:3001/auth', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
