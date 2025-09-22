@@ -2,10 +2,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
-<<<<<<< HEAD
-=======
 import Header from "../components/Header";
->>>>>>> 090607354afa2be5d1834fefe7bdb5bcc5c51758
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { verificaPermissao } from "../../utils/auth";
 
@@ -16,11 +13,8 @@ export default function ChamadosAdm() {
   const [modalMode, setModalMode] = useState("details");
   const [currentChamado, setCurrentChamado] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-<<<<<<< HEAD
-=======
   const [user, setUser] = useState({});
 
->>>>>>> 090607354afa2be5d1834fefe7bdb5bcc5c51758
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [chamadoToDelete, setChamadoToDelete] = useState(null);
   const [isReadyToDelete, setIsReadyToDelete] = useState(false);
