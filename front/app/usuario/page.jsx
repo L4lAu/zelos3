@@ -21,6 +21,7 @@ export default function UsuarioPage() {
   const [showNovoChamado, setShowNovoChamado] = useState(false);
   const [erroPatrimonio, setErroPatrimonio] = useState("");
 
+  
   // Instância do axios
   const api = axios.create({
     baseURL: "http://localhost:3001", // ajuste conforme seu backend
@@ -63,8 +64,8 @@ export default function UsuarioPage() {
     carregarChamados();
   }, []);
 
-  // Filtrar chamados
   useEffect(() => {
+  // Filtrar chamados
     let resultado = chamados;
     if (filtroStatus !== "todos") {
       resultado = resultado.filter((c) => c.status === filtroStatus);
@@ -74,9 +75,9 @@ export default function UsuarioPage() {
       resultado = resultado.filter(
         (c) =>
           c.id.toString().includes(termo) ||
-          (c.patrimonio && c.patrimonio.toLowerCase().includes(termo)) ||
-          (c.descricaoProblema &&
-            c.descricaoProblema.toLowerCase().includes(termo))
+          (c.numero_patrimonio || c.numero_patrimonio.toLowerCase().includes(termo)) ||
+          (c.descricao ||
+            c.descricao.toLowerCase().includes(termo))
       );
     }
     setChamadosFiltrados(resultado);
@@ -84,21 +85,30 @@ export default function UsuarioPage() {
 
   // Criar chamado
   const handleCriarChamado = async (novoChamado) => {
-    if (!novoChamado.patrimonio && !novoChamado.descricaoProblema) {
-      setErroPatrimonio("Informe o número de patrimônio ou uma descrição do item");
-      return false;
-    }
-
+    console.log('Dados do novo chamado:', novoChamado);
+    
     try {
-      const response = await api.post("/pool", novoChamado);
-      setChamados([...chamados, response.data]);
-      setShowNovoChamado(false);
-      setErroPatrimonio("");
-      return true;
+      // Verifique se está enviando todos os campos obrigatórios
+      const dadosCompletos = {
+        descricao: novoChamado.descricao || '',
+        tipo: novoChamado.tipo || 'Manutenção',
+        // Adicione outros campos obrigatórios da tabela pool aqui
+        status: 'Aberto', // exemplo
+        created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      };
+      
+      const response = await fetch('/api/pool', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(dadosCompletos)
+      });
+      
+      // ... resto do código
     } catch (error) {
-      console.error("Erro ao criar chamado:", error);
-      alert("Erro ao criar chamado.");
-      return false;
+      console.error('Erro ao criar chamado:', error);
     }
   };
 
@@ -203,97 +213,7 @@ export default function UsuarioPage() {
           </main>
         </div>
       </div>
-      <div className="min-h-screen bg-white text-black flex flex-col">
-        {/* Header fixo */}
-        <Header
-          user={user}
-          onLogout={handleLogout}
-          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-        />
-
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar */}
-          <Sidebar
-            activePage="meus-chamados"
-            userType="usuario"
-            onNavigate={() => setSidebarOpen(false)}
-          />
-
-          {/* Conteúdo */}
-          <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8 mt-16 lg:mt-0">
-            {/* Título */}
-            <div className="mb-6 flex justify-between items-center">
-              <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
-                  Meus Chamados
-                </h1>
-                <p className="text-gray-700 text-sm sm:text-base">
-                  Acompanhe os chamados que você criou
-                </p>
-              </div>
-              <button
-                onClick={() => setShowNovoChamado(true)}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition text-sm sm:text-base"
-              >
-                Novo Chamado
-              </button>
-            </div>
-
-            {/* Filtros */}
-            <div className="bg-white border border-red-500 p-4 rounded-lg shadow mb-6 flex flex-col lg:flex-row gap-4 items-start lg:items-center">
-              <input
-                type="text"
-                placeholder="Buscar por ID, patrimônio ou descrição..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full lg:flex-1 p-2 border border-red-500 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-sm sm:text-base"
-              />
-              <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-                <select
-                  value={filtroStatus}
-                  onChange={(e) => setFiltroStatus(e.target.value)}
-                  className="p-2 border border-red-500 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-sm sm:text-base w-full sm:w-auto"
-                >
-                  <option value="todos">Todos os status</option>
-                  <option value="aberto">Aberto</option>
-                  <option value="em_andamento">Em Andamento</option>
-                  <option value="concluido">Concluído</option>
-                </select>
-                <button
-                  onClick={carregarChamados}
-                  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition text-sm sm:text-base w-full sm:w-auto"
-                >
-                  Atualizar
-                </button>
-              </div>
-            </div>
-
-            {/* Modal Novo Chamado */}
-            <ModalNovoChamado
-              isOpen={showNovoChamado}
-              onClose={handleFecharModal}
-              onCreate={handleCriarChamado}
-              error={erroPatrimonio}
-            />
-
-            {/* Chamados */}
-            {loading ? (
-              <div className="bg-white p-6 sm:p-8 rounded-lg shadow text-center border border-red-300">
-                <p className="text-red-600 font-semibold text-sm sm:text-base">
-                  Carregando chamados...
-                </p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <ChamadosUsuarioTable
-                  chamados={chamadosFiltrados}
-                  onVerDetalhes={handleVerDetalhes}
-                />
-              </div>
-            )}
-          </main>
-        </div>
-      </div>
+      
     </>
   );
 }

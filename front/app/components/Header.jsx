@@ -22,12 +22,12 @@ export default function Header({ user, onLogout }) {
                 onClick={() => setShowDropdown(!showDropdown)}
               >
                 <span className="text-sm font-medium text-white">
-                  {user.username}
+                  {user.displayname}
                 </span>
                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
                   {/* Cor do texto do avatar alterada para uma do gradiente */}
                   <span className="text-[#1e2128] text-sm font-semibold">
-                    {user.username}
+                    {user.displayname}
                   </span>
                 </div>
               </button>

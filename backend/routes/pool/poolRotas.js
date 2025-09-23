@@ -63,9 +63,9 @@ router.delete('/pool/:id', authMiddleware, async (req, res) => {
 });
 
 // POST /pool - Cria novo pool (protegido)
-router.post('/pool', authMiddleware, async (req, res) => {
+router.post('/Pool', authMiddleware, async (req, res) => {
     try {
-        const userId = req.usuarioId; // vem do token JWT
+        const userId = req.numero_ra; // vem do token JWT
         const poolData = req.body;
 
         if (!poolData || Object.keys(poolData).length === 0) {

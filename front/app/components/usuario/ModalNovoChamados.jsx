@@ -3,19 +3,18 @@ import { useState } from 'react';
 
 export default function ModalNovoChamado({ isOpen, onClose, onCreate, error }) {
   const [novoChamado, setNovoChamado] = useState({
-    numero_patrimonio: "",
     descricao: "",
     tipo: "Manutenção"
   });
 
   const handleSubmit = () => {
     onCreate(novoChamado);
-    setNovoChamado({ numero_patrimonio: "", descricao: "", tipo: "Manutenção" });
+    setNovoChamado({ descricao: "", tipo: "Manutenção" });
   };
 
   const handleClose = () => {
     onClose();
-    setNovoChamado({ numero_patrimonio: "", descricao: "", tipo: "Manutenção" });
+    setNovoChamado({ descricao: "", tipo: "Manutenção" });
   };
 
   if (!isOpen) return null;
@@ -25,17 +24,6 @@ export default function ModalNovoChamado({ isOpen, onClose, onCreate, error }) {
       <div className="bg-[linear-gradient(10deg,#1e2128,#282c34)] p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-xl font-bold text-red-600 mb-4">Novo Chamado</h2>
         
-        {/* Número de Patrimônio */}
-        <div className="mb-4 text-white">
-          <label className="block text-white mb-2">Número de Patrimônio</label>
-          <input
-            type="text"
-            placeholder="Digite o número de patrimônio"
-            value={novoChamado.numero_patrimonio}
-            onChange={e => setNovoChamado({...novoChamado, numero_patrimonio: e.target.value})}
-            className="w-full p-2 border border-white rounded focus:outline-none focus:ring-2 focus:ring-red-500"
-          />
-        </div>
         
         {/* Tipo de Chamado */}
         <div className="mb-4 text-white">

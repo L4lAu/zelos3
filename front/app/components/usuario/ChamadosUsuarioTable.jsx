@@ -5,8 +5,8 @@ export default function ChamadosUsuarioTable({
   chamados,
   onVerDetalhes
 }) {
-  const [sortField, setSortField] = useState('dataCriacao');
-  const [sortDirection, setSortDirection] = useState('desc');
+  const [sortField, setSortField] = useState('criado_em');
+  const [sortDirection, setSortDirection] = useState('descricao');
 
   const sortedChamados = [...chamados].sort((a, b) => {
     let valueA = a[sortField];
@@ -42,7 +42,6 @@ export default function ChamadosUsuarioTable({
               <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-400 uppercase cursor-pointer" onClick={() => handleSort('id')}>
                 ID {renderSortIcon('id')}
               </th>
-              <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-400 uppercase">Patrimônio</th>
               <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-400 uppercase">Descrição</th>
               <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-400 uppercase">Tipo</th>
               <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-400 uppercase cursor-pointer" onClick={() => handleSort('status')}>
@@ -58,11 +57,10 @@ export default function ChamadosUsuarioTable({
             {sortedChamados.map((chamado) => (
               <tr key={chamado.id} className="hover:bg-[#181b20]">
                 <td className="px-2 sm:px-4 py-2 text-white">#{chamado.id}</td>
-                <td className="px-2 sm:px-4 py-2 text-white-600">{chamado.patrimonio}</td>
-                <td className="px-2 sm:px-4 py-2 text-white-600 truncate max-w-[100px] sm:max-w-xs">{chamado.descricaoProblema}</td>
+                <td className="px-2 sm:px-4 py-2 text-white-600 truncate max-w-[100px] sm:max-w-xs">{chamado.descricao}</td>
                 <td className="px-2 sm:px-4 py-2 text-white-600">{chamado.tipo}</td>
                 <td className="px-2 sm:px-4 py-2"><StatusBadge status={chamado.status} /></td>
-                <td className="px-2 sm:px-4 py-2 text-white-600">{new Date(chamado.dataCriacao).toLocaleDateString('pt-BR')}</td>
+                <td className="px-2 sm:px-4 py-2 text-white-600">{new Date(chamado.criado_em).toLocaleDateString('pt-BR')}</td>
                 <td className="px-2 sm:px-4 py-2">
                   <div className="flex flex-wrap gap-1 sm:gap-2">
                     <button
@@ -87,8 +85,7 @@ export default function ChamadosUsuarioTable({
               <span>ID: #{chamado.id}</span>
               <span>{new Date(chamado.dataCriacao).toLocaleDateString('pt-BR')}</span>
             </div>
-            <div className="mt-1 text-gray-600"><strong>Patrimônio:</strong> {chamado.patrimonio}</div>
-            <div className="mt-1 text-gray-600"><strong>Descrição:</strong> {chamado.descricaoProblema}</div>
+            <div className="mt-1 text-gray-600"><strong>Descrição:</strong> {chamado.descricao}</div>
             <div className="mt-1 text-gray-600"><strong>Tipo:</strong> {chamado.tipo}</div>
             <div className="mt-1"><StatusBadge status={chamado.status} /></div>
             <div className="mt-2">
