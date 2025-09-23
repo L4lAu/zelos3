@@ -4,8 +4,13 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/jwt.js';
 import { pool } from '../config/database.js';
 import bcrypt from 'bcryptjs';
+import { loginController } from "../controllers/AuthController.js"
 
 const router = express.Router();
+
+
+router.post('/local', loginController);
+
 router.post('/', async (req, res, next) => {
   passport.authenticate('ldapauth', { session: false }, async (err, user, info) => {
     if (err) return res.status(500).json({ error: 'Erro interno no servidor' });
@@ -19,9 +24,9 @@ router.post('/', async (req, res, next) => {
     console.log('RA enviado pelo front:', req.body.username);
 
     try {
-      const numero_ra = req.body.username; 
+      const numero_ra = req.body.username;
       const nomeCompleto = user.displayName || 'Usuário';
-      
+
 
       const [rows] = await pool.query(
         'SELECT * FROM usuarios WHERE numero_ra = ?',

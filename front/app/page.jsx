@@ -47,7 +47,34 @@ const LoginPage = () => {
             break;
         }
       } else {
-        setErro(data.message || 'Usuário ou senha inválidos');
+        const response2 = await fetch('http://localhost:3001/auth/local', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data2 = await response2.json();
+
+      if (response2.ok) {
+        localStorage.setItem('token', data2.token);
+        localStorage.setItem('user', JSON.stringify(data2.user));
+
+        // Redirecionamento baseado na role
+        switch (data2.user.role) {
+          case 'admin':
+            window.location.href = '/admin';
+            break;
+          case 'tecnico':
+            window.location.href = '/tecnico';
+            break;
+          case 'usuario':
+          default:
+            window.location.href = '/usuario';
+            break;
+        }
+      }
       }
     } catch (error) {
       console.error('Erro:', error);

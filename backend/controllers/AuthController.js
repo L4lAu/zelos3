@@ -21,9 +21,8 @@ const loginController = async (req, res) => {
     }
 
     // Gerar o token JWT
-    const token = jwt.sign({ id: usuario.id, tipo: usuario.tipo }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const payload = { id: usuario.id, ra: usuario.numero_ra, displayName: usuario.nome, role: usuario.funcao };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '8h' });
 
     // Adicione o objeto user ao retorno
     res.json({
@@ -31,8 +30,10 @@ const loginController = async (req, res) => {
       token,
       user: {
         id: usuario.id,
+        ra: usuario.numero_ra,
         email: usuario.email,
-        role: usuario.funcao
+        role: usuario.funcao,
+        displayName: usuario.nome,
       }
     });  } catch (error) {
     console.error('Erro ao fazer login:', error);
