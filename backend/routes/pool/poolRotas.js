@@ -64,8 +64,7 @@ router.delete('/pool/:id', authMiddleware, async (req, res) => {
 
 // POST /pool - Cria novo pool (protegido)
 router.post('/Pool', authMiddleware, async (req, res) => {
-    try {
-        const userId = req.numero_ra; // vem do token JWT
+    try { // vem do token JWT
         const poolData = req.body;
 
         if (!poolData || Object.keys(poolData).length === 0) {
@@ -73,7 +72,7 @@ router.post('/Pool', authMiddleware, async (req, res) => {
         }
 
         // Adiciona o campo created_by
-        const novoPool = await criarPool({ ...poolData, created_by: userId });
+        const novoPool = await criarPool({ ...poolData,});
 
         res.status(201).json(novoPool);
     } catch (error) {

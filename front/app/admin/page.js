@@ -22,12 +22,6 @@ export default function ChamadosAdm() {
   const MAX_ASSUNTO_LENGTH = 50;
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   // 🔹 Buscar chamados do backend
   useEffect(() => {

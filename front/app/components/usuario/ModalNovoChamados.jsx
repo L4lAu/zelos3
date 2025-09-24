@@ -1,20 +1,25 @@
 // components/ModalNovoChamado.jsx
 import { useState } from 'react';
 
+
 export default function ModalNovoChamado({ isOpen, onClose, onCreate, error }) {
+  
+  const [user, setUser] = useState({});
+  const storedUser = user;
   const [novoChamado, setNovoChamado] = useState({
     descricao: "",
-    tipo: "Manutenção"
+    tipo: "Manutenção",
+    created_by: storedUser.ra
   });
 
   const handleSubmit = () => {
     onCreate(novoChamado);
-    setNovoChamado({ descricao: "", tipo: "Manutenção" });
+    setNovoChamado({ descricao: "", tipo: "Manutencao" });
   };
 
   const handleClose = () => {
     onClose();
-    setNovoChamado({ descricao: "", tipo: "Manutenção" });
+    setNovoChamado({ descricao: "", tipo: "Manutencao" });
   };
 
   if (!isOpen) return null;
@@ -33,7 +38,7 @@ export default function ModalNovoChamado({ isOpen, onClose, onCreate, error }) {
             onChange={e => setNovoChamado({...novoChamado, tipo: e.target.value})}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           >
-            <option value="Manutenção" className=' bg-[rgba(31,31,31,0.79)] ' >Manutenção</option>
+            <option value="Manutencao" className=' bg-[rgba(31,31,31,0.79)] ' >Manutenção</option>
             <option value="Apoio Técnico" className=' bg-[rgba(53,53,53,0.79)] '>Apoio Técnico</option>
           </select>
         </div>

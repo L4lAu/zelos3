@@ -21,15 +21,8 @@ export default function UsuarioPage() {
   const [showNovoChamado, setShowNovoChamado] = useState(false);
   const [erroPatrimonio, setErroPatrimonio] = useState("");
 
-  
+
   // Instância do axios
-  const api = axios.create({
-    baseURL: "http://localhost:3001", // ajuste conforme seu backend
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
 
   // Buscar usuário do localStorage e validar permissão
   useEffect(() => {
@@ -49,6 +42,14 @@ export default function UsuarioPage() {
   // Buscar chamados do usuário
   const carregarChamados = async () => {
     setLoading(true);
+    const api = axios.create({
+      baseURL: "http://localhost:3001", // ajuste conforme seu backend
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
     try {
       const response = await api.get("/pool"); // endpoint que retorna chamados do usuário
       setChamados(response.data);
@@ -65,7 +66,7 @@ export default function UsuarioPage() {
   }, []);
 
   useEffect(() => {
-  // Filtrar chamados
+    // Filtrar chamados
     let resultado = chamados;
     if (filtroStatus !== "todos") {
       resultado = resultado.filter((c) => c.status === filtroStatus);
@@ -86,18 +87,21 @@ export default function UsuarioPage() {
   // Criar chamado
   const handleCriarChamado = async (novoChamado) => {
     console.log('Dados do novo chamado:', novoChamado);
-    
+
     try {
+      const token = localStorage.getItem("token")
+      const storedUser = user;
       // Verifique se está enviando todos os campos obrigatórios
       const dadosCompletos = {
         descricao: novoChamado.descricao || '',
         tipo: novoChamado.tipo || 'Manutenção',
         // Adicione outros campos obrigatórios da tabela pool aqui
         status: 'Aberto', // exemplo
-        created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        created_by: storedUser.ra
       };
-      
-      const response = await fetch('/api/pool', {
+      console.log(storedUser)
+
+      const response = await fetch(`http://localhost:3001/pool`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +109,7 @@ export default function UsuarioPage() {
         },
         body: JSON.stringify(dadosCompletos)
       });
-      
+
       // ... resto do código
     } catch (error) {
       console.error('Erro ao criar chamado:', error);
@@ -213,7 +217,7 @@ export default function UsuarioPage() {
           </main>
         </div>
       </div>
-      
+
     </>
   );
 }

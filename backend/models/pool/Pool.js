@@ -40,6 +40,7 @@ const criarPool = async (poolData) => {
     // Sanitiza os dados antes de criar
     const sanitizedData = sanitizeData(poolData);
     await create('pool', sanitizedData);
+    console.log("novo pool: ", poolData);
     return "Pool criado com sucesso!";
   } catch (error) {
     console.error('Erro ao criar pool:', error);

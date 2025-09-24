@@ -13,7 +13,9 @@ router.post('/local', loginController);
 
 router.post('/', async (req, res, next) => {
   passport.authenticate('ldapauth', { session: false }, async (err, user, info) => {
-    if (err) return res.status(500).json({ error: 'Erro interno no servidor' });
+    if (err) {
+      res.status(500).json({ error: 'Erro interno no servidor' });
+    } 
     if (!user) {
       console.log('Falha no LDAP:', info); // log do motivo de falha
       return res.status(401).json({ error: info?.message || 'Autenticação falhou' });
