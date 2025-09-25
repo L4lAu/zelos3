@@ -12,6 +12,9 @@ import axios from "axios";
 
 
 export default function ChamadosAdm() {
+
+  const [sortField, setSortField] = useState('id');
+  const [sortDirection, setSortDirection] = useState('criado_em');
   const [chamados, setChamados] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("details");
@@ -26,7 +29,7 @@ export default function ChamadosAdm() {
   const [user, setUser] = useState({});
   const [erroPatrimonio, setErroPatrimonio] = useState("");
   const [loading, setLoading] = useState(true);
-  
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -196,6 +199,7 @@ export default function ChamadosAdm() {
   const filteredChamados = chamados.filter((c) => {
     const term = searchTerm.toLowerCase();
     return (
+      c.id?.toString().toLowerCase().includes(term) ||
       c.created_by?.toString().toLowerCase().includes(term) ||
       c.descricao?.toLowerCase().includes(term) ||
       c.tipo?.toLowerCase().includes(term) ||
@@ -239,7 +243,7 @@ export default function ChamadosAdm() {
     setErroPatrimonio("");
   };
 
-  
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen gap-2">
@@ -259,6 +263,31 @@ export default function ChamadosAdm() {
       </div>
     );
   }
+
+
+  const sortedChamados = [...chamados].sort((a, b) => {
+    let valueA = a[sortField];
+    let valueB = b[sortField];
+
+    if (sortField.includes('data')) {
+      valueA = new Date(valueA);
+      valueB = new Date(valueB);
+    }
+
+    if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+    if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const handleSort = (field) => {
+    if (sortField === field) setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    else { setSortField(field); setSortDirection('asc'); }
+  };
+
+  const renderSortIcon = (field) => {
+    if (sortField !== field) return null;
+    return sortDirection === 'asc' ? '↑' : '↓';
+  };
 
   return (
     <div className="min-h-screen bg-[#282c34] text-gray-300 flex flex-col">
@@ -282,12 +311,12 @@ export default function ChamadosAdm() {
               </p>
             </div>
             <button
-                onClick={() => setShowNovoChamado(true)}
-                // Botão com fundo escuro e hover sutil
-                className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors duration-200 text-sm sm:text-base shadow-md"
-              >
-                Criar Novo Chamado
-              </button>
+              onClick={() => setShowNovoChamado(true)}
+              // Botão com fundo escuro e hover sutil
+              className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors duration-200 text-sm sm:text-base shadow-md"
+            >
+              Criar Novo Chamado
+            </button>
           </div>
 
           {/* Stats */}
@@ -320,199 +349,200 @@ export default function ChamadosAdm() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button
-                  onClick={()=>carregarChamados(true)}
-                  // Botão com o mesmo estilo do "Novo Chamado"
-                  className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors duration-200 text-sm sm:text-base shadow-md w-full sm:w-auto"
-                >
-                  Atualizar
-                </button>
+              onClick={() => carregarChamados(true)}
+              // Botão com o mesmo estilo do "Novo Chamado"
+              className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors duration-200 text-sm sm:text-base shadow-md w-full sm:w-auto"
+            >
+              Atualizar
+            </button>
           </div>
           <ModalNovoChamado
-              isOpen={showNovoChamado}
-              onClose={handleFecharModal}
-              onCreate={handleCriarChamado}
-              error={erroPatrimonio}
-            />
+            isOpen={showNovoChamado}
+            onClose={handleFecharModal}
+            onCreate={handleCriarChamado}
+            error={erroPatrimonio}
+          />
           <div className="overflow-x-auto bg-[#1e2128] p-4 rounded-lg shadow-xl border border-black/30">
-  {/* Tabela desktop */}
-  <table className="hidden md:table w-full text-left border-collapse min-w-[600px]">
-    <thead className="text-gray-400 text-xs sm:text-sm">
-      <tr>
-        <th className="pb-3 px-2 min-w-[60px]">RA</th>
-        <th className="pb-3 px-2 min-w-[150px]">Descrição</th>
-        <th className="pb-3 px-2 min-w-[100px]">Data criação</th>
-        <th className="pb-3 px-2 min-w-[100px]">Status</th>
-        <th className="pb-3 px-2 min-w-[120px] text-right">Ações</th>
-      </tr>
-    </thead>
-    <tbody className="text-gray-300 text-xs sm:text-sm">
-      {filteredChamados
-        .filter((c) => c.status.toLowerCase() === "aberto")
-        .map((c) => (
-          <tr
-            key={c.id}
-            className="border-t border-gray-700 hover:bg-[#2f333d] transition"
-          >
-            <td className="py-2 px-2 whitespace-nowrap">{c.created_by}</td>
-            <td className="py-2 px-2 max-w-xs break-words">
-              {c.descricao?.length > MAX_descricao_LENGTH ? (
-                <>
-                  {c.descricao.substring(0, MAX_descricao_LENGTH)}...
-                  <button
-                    className="text-blue-400 hover:underline ml-1"
-                    onClick={() => handleOpenModal("details", c)}
+            {/* Tabela desktop */}
+            <table className="hidden md:table w-full text-left border-collapse min-w-[600px]">
+              <thead className="text-gray-400 text-xs sm:text-sm">
+                <tr>
+                  <th className="pb-3 px-2 min-w-[60px] uppercase cursor-pointer" onClick={() => handleSort('id')}>ID {renderSortIcon('id')}</th>
+                  <th className="pb-3 px-2 min-w-[60px]">RA</th>
+                  <th className="pb-3 px-2 min-w-[150px]">Descrição</th>
+                  <th className="pb-3 px-2 min-w-[100px]">Data criação</th>
+                  <th className="pb-3 px-2 min-w-[100px]">Status</th>
+                  <th className="pb-3 px-2 min-w-[120px] text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-300 text-xs sm:text-sm">
+                {sortedChamados
+                  .filter((c) => c.status.toLowerCase() === "aberto")
+                  .map((c) => (
+                    <tr 
+                    
+                      key={c.id}
+                      className="border-t border-gray-700 hover:bg-[#2f333d] transition"
+                    >
+                      <td className="py-2 px-2 whitespace-nowrap">#{c.id}</td>
+                      <td className="py-2 px-2 whitespace-nowrap">{c.created_by}</td>
+                      <td className="py-2 px-2 max-w-xs break-words">
+                        {c.descricao?.length > MAX_descricao_LENGTH ? (
+                          <>
+                            {c.descricao.substring(0, MAX_descricao_LENGTH)}...
+                            <button
+                              className="text-blue-400 hover:underline ml-1"
+                              onClick={() => handleOpenModal("details", c)}
+                            >
+                              Ver mais
+                            </button>
+                          </>
+                        ) : (
+                          c.descricao
+                        )}
+                      </td>
+                      <td className="py-2 px-2 whitespace-nowrap">
+                        {`${new Date(c.criado_em).toLocaleDateString("pt-BR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                        })} às ${new Date(c.criado_em).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}`}
+                      </td>
+                      <td className="py-2 px-2 whitespace-nowrap">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${c.status === "Aberto"
+                              ? "bg-red-500/20 text-red-400"
+                              : c.status === "Em Andamento"
+                                ? "bg-yellow-500/20 text-yellow-400"
+                                : c.status === "Concluído"
+                                  ? "bg-green-500/20 text-green-400"
+                                  : "bg-gray-500/20 text-gray-400"
+                            }`}
+                        >
+                          {c.status}
+                        </span>
+                      </td>
+                      <td className="py-2 px-2 flex flex-wrap gap-2 justify-end min-w-[120px]">
+                        <button
+                          className="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs"
+                          onClick={() => handleOpenModal("details", c)}
+                        >
+                          Ver
+                        </button>
+                        <button
+                          className="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs"
+                          onClick={() => handleOpenModal("edit", c)}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-xs"
+                          onClick={() => openDeleteConfirm(c)}
+                        >
+                          Deletar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+
+            {/* Cards mobile */}
+            <div className="md:hidden flex flex-col gap-4">
+              {filteredChamados
+                .filter((c) => c.status.toLowerCase() === "aberto")
+                .map((c) => (
+                  <div
+                    key={c.id}
+                    className="bg-[#2f333d] rounded-lg p-4 shadow-md border border-black/30"
                   >
-                    Ver mais
-                  </button>
-                </>
-              ) : (
-                c.descricao
-              )}
-            </td>
-            <td className="py-2 px-2 whitespace-nowrap">
-              {`${new Date(c.criado_em).toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "2-digit",
-              })} às ${new Date(c.criado_em).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}`}
-            </td>
-            <td className="py-2 px-2 whitespace-nowrap">
-              <span
-                className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                  c.status === "Aberto"
-                    ? "bg-red-500/20 text-red-400"
-                    : c.status === "Em Andamento"
-                    ? "bg-yellow-500/20 text-yellow-400"
-                    : c.status === "Concluído"
-                    ? "bg-green-500/20 text-green-400"
-                    : "bg-gray-500/20 text-gray-400"
-                }`}
-              >
-                {c.status}
-              </span>
-            </td>
-            <td className="py-2 px-2 flex flex-wrap gap-2 justify-end min-w-[120px]">
-              <button
-                className="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs"
-                onClick={() => handleOpenModal("details", c)}
-              >
-                Ver
-              </button>
-              <button
-                className="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs"
-                onClick={() => handleOpenModal("edit", c)}
-              >
-                Editar
-              </button>
-              <button
-                className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-xs"
-                onClick={() => openDeleteConfirm(c)}
-              >
-                Deletar
-              </button>
-            </td>
-          </tr>
-        ))}
-    </tbody>
-  </table>
+                    <div className="mb-2">
+                      <span className="font-semibold text-gray-400 text-xs uppercase">
+                        RA:
+                      </span>{" "}
+                      <span className="text-gray-300">{c.created_by}</span>
+                    </div>
 
-  {/* Cards mobile */}
-  <div className="md:hidden flex flex-col gap-4">
-    {filteredChamados
-      .filter((c) => c.status.toLowerCase() === "aberto")
-      .map((c) => (
-        <div
-          key={c.id}
-          className="bg-[#2f333d] rounded-lg p-4 shadow-md border border-black/30"
-        >
-          <div className="mb-2">
-            <span className="font-semibold text-gray-400 text-xs uppercase">
-              RA:
-            </span>{" "}
-            <span className="text-gray-300">{c.created_by}</span>
-          </div>
+                    <div className="mb-2">
+                      <span className="font-semibold text-gray-400 text-xs uppercase">
+                        Descrição:
+                      </span>{" "}
+                      <span className="text-gray-300">
+                        {c.descricao?.length > MAX_descricao_LENGTH ? (
+                          <>
+                            {c.descricao.substring(0, MAX_descricao_LENGTH)}...
+                            <button
+                              className="text-blue-400 hover:underline ml-1"
+                              onClick={() => handleOpenModal("details", c)}
+                            >
+                              Ver mais
+                            </button>
+                          </>
+                        ) : (
+                          c.descricao
+                        )}
+                      </span>
+                    </div>
 
-          <div className="mb-2">
-            <span className="font-semibold text-gray-400 text-xs uppercase">
-              Descrição:
-            </span>{" "}
-            <span className="text-gray-300">
-              {c.descricao?.length > MAX_descricao_LENGTH ? (
-                <>
-                  {c.descricao.substring(0, MAX_descricao_LENGTH)}...
-                  <button
-                    className="text-blue-400 hover:underline ml-1"
-                    onClick={() => handleOpenModal("details", c)}
-                  >
-                    Ver mais
-                  </button>
-                </>
-              ) : (
-                c.descricao
-              )}
-            </span>
-          </div>
+                    <div className="mb-2">
+                      <span className="font-semibold text-gray-400 text-xs uppercase">
+                        Data criação:
+                      </span>{" "}
+                      <span className="text-gray-300">{`${new Date(
+                        c.criado_em
+                      ).toLocaleDateString("pt-BR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                      })} às ${new Date(c.criado_em).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}`}</span>
+                    </div>
 
-          <div className="mb-2">
-            <span className="font-semibold text-gray-400 text-xs uppercase">
-              Data criação:
-            </span>{" "}
-            <span className="text-gray-300">{`${new Date(
-              c.criado_em
-            ).toLocaleDateString("pt-BR", {
-              day: "2-digit",
-              month: "2-digit",
-            })} às ${new Date(c.criado_em).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}`}</span>
-          </div>
+                    <div className="mb-2">
+                      <span className="font-semibold text-gray-400 text-xs uppercase">
+                        Status:
+                      </span>{" "}
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${c.status === "Aberto"
+                            ? "bg-red-500/20 text-red-400"
+                            : c.status === "Em Andamento"
+                              ? "bg-yellow-500/20 text-yellow-400"
+                              : c.status === "Concluído"
+                                ? "bg-green-500/20 text-green-400"
+                                : "bg-gray-500/20 text-gray-400"
+                          }`}
+                      >
+                        {c.status}
+                      </span>
+                    </div>
 
-          <div className="mb-2">
-            <span className="font-semibold text-gray-400 text-xs uppercase">
-              Status:
-            </span>{" "}
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                c.status === "Aberto"
-                  ? "bg-red-500/20 text-red-400"
-                  : c.status === "Em Andamento"
-                  ? "bg-yellow-500/20 text-yellow-400"
-                  : c.status === "Concluído"
-                  ? "bg-green-500/20 text-green-400"
-                  : "bg-gray-500/20 text-gray-400"
-              }`}
-            >
-              {c.status}
-            </span>
+                    <div className="flex flex-wrap gap-2 justify-end mt-2">
+                      <button
+                        className="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs"
+                        onClick={() => handleOpenModal("details", c)}
+                      >
+                        Ver
+                      </button>
+                      <button
+                        className="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs"
+                        onClick={() => handleOpenModal("edit", c)}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-xs"
+                        onClick={() => openDeleteConfirm(c)}
+                      >
+                        Deletar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
           </div>
-
-          <div className="flex flex-wrap gap-2 justify-end mt-2">
-            <button
-              className="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs"
-              onClick={() => handleOpenModal("details", c)}
-            >
-              Ver
-            </button>
-            <button
-              className="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs"
-              onClick={() => handleOpenModal("edit", c)}
-            >
-              Editar
-            </button>
-            <button
-              className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-xs"
-              onClick={() => openDeleteConfirm(c)}
-            >
-              Deletar
-            </button>
-          </div>
-        </div>
-      ))}
-  </div>
-</div>
 
         </main>
       </div>

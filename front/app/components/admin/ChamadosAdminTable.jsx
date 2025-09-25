@@ -1,6 +1,5 @@
 // pages/ChamadosAdm.jsx
 import { useState, useEffect } from "react";
-import ChamadosAdminTable from "../components/ChamadosAdminTable";
 
 export default function ChamadosAdm() {
   const [chamados, setChamados] = useState([]);

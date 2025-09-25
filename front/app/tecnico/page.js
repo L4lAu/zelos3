@@ -40,7 +40,7 @@ export default function TecnicoPage() {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3001/pool", {
+        const response = await fetch("http://localhost:3001/pool/", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
