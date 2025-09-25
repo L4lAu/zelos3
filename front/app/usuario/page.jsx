@@ -76,7 +76,6 @@ export default function UsuarioPage() {
       resultado = resultado.filter(
         (c) =>
           c.id.toString().includes(termo) ||
-          (c.numero_patrimonio || c.numero_patrimonio.toLowerCase().includes(termo)) ||
           (c.descricao ||
             c.descricao.toLowerCase().includes(termo))
       );
@@ -97,7 +96,7 @@ export default function UsuarioPage() {
         tipo: novoChamado.tipo || 'Manutenção',
         // Adicione outros campos obrigatórios da tabela pool aqui
         status: 'Aberto', // exemplo
-        created_by: storedUser.ra
+        created_by: storedUser.numero_ra
       };
       console.log(storedUser)
 
@@ -146,9 +145,9 @@ export default function UsuarioPage() {
             <div className="mb-6 flex justify-between items-center">
               <div>
                 {/* Título principal com cor clara para destaque */}
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-100">Meus Chamados</h1>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-100">Chamados</h1>
                 {/* Subtítulo com cor mais suave */}
-                <p className="text-gray-400 text-sm sm:text-base">Acompanhe os chamados que você criou</p>
+                <p className="text-gray-400 text-sm sm:text-base">Acompanhe os chamados de assistencia</p>
               </div>
               <button
                 onClick={() => setShowNovoChamado(true)}

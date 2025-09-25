@@ -9,7 +9,7 @@ export default function ModalNovoChamado({ isOpen, onClose, onCreate, error }) {
   const [novoChamado, setNovoChamado] = useState({
     descricao: "",
     tipo: "Manutenção",
-    created_by: storedUser.ra
+    created_by: storedUser.numero_ra
   });
 
   const handleSubmit = () => {

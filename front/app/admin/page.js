@@ -19,7 +19,7 @@ export default function ChamadosAdm() {
   const [chamadoToDelete, setChamadoToDelete] = useState(null);
   const [isReadyToDelete, setIsReadyToDelete] = useState(false);
   const [showNovoChamado, setShowNovoChamado] = useState(false);
-  const MAX_ASSUNTO_LENGTH = 50;
+  const MAX_descricao_LENGTH = 50;
   const [user, setUser] = useState(null);
 
 
@@ -60,7 +60,7 @@ export default function ChamadosAdm() {
   const handleOpenModal = (mode, chamado = null) => {
     setModalMode(mode);
     setCurrentChamado(
-      chamado || { assunto: "", categoria: "", status: "Aberto", descricao: "" }
+      chamado || { descricao: "", tipo: "", status: "Aberto", created_by: "", criado_em: "".string() }
     );
     setIsModalOpen(true);
   };
@@ -141,9 +141,9 @@ export default function ChamadosAdm() {
   const filteredChamados = chamados.filter((c) => {
     const term = searchTerm.toLowerCase();
     return (
-      c.protocolo?.toLowerCase().includes(term) ||
-      c.assunto?.toLowerCase().includes(term) ||
-      c.categoria?.toLowerCase().includes(term) ||
+      c.created_by?.toString().toLowerCase().includes(term) ||
+      c.descricao?.toLowerCase().includes(term) ||
+      c.tipo?.toLowerCase().includes(term) ||
       c.status?.toLowerCase().includes(term)
     );
   });
@@ -233,7 +233,7 @@ export default function ChamadosAdm() {
           <div className="bg-[#1e2128] border border-black/30 p-4 rounded-lg shadow mb-6 flex flex-col lg:flex-row gap-4 items-start lg:items-center">
             <input
               type="text"
-              placeholder="🔎 Buscar por protocolo, assunto, status..."
+              placeholder="🔎 Buscar por created_by, descricao, status..."
               className="w-full lg:flex-1 p-2 bg-[#282c34] border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-sm sm:text-base placeholder-gray-400"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -258,72 +258,80 @@ export default function ChamadosAdm() {
               <table className="w-full text-left border-collapse">
                 <thead className="text-gray-400 text-sm">
                   <tr>
-                    <th className="pb-3">Protocolo</th>
-                    <th className="pb-3">Assunto</th>
-                    <th className="pb-3">Data</th>
+                    <th className="pb-3">ra</th>
+                    <th className="pb-3">descricao</th>
+                    <th className="pb-3">data criação</th>
                     <th className="pb-3">Status</th>
                     <th className="pb-3 text-right">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-300 text-sm sm:text-base">
-                  {filteredChamados.map((c) => (
-                    <tr
-                      key={c.id}
-                      className="border-t border-gray-700 hover:bg-[#2f333d] transition"
-                    >
-                      <td className="py-2">{c.protocolo}</td>
-                      <td className="py-2">
-                        {c.assunto?.length > MAX_ASSUNTO_LENGTH ? (
-                          <>
-                            {c.assunto.substring(0, MAX_ASSUNTO_LENGTH)}...
-                            <button
-                              className="text-blue-400 hover:underline ml-1"
-                              onClick={() => handleOpenModal("details", c)}
-                            >
-                              Ver mais
-                            </button>
-                          </>
-                        ) : (
-                          c.assunto
-                        )}
-                      </td>
-                      <td className="py-2">{c.data}</td>
-                      <td className="py-2">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${c.status === "Aberto"
+                  {filteredChamados
+                    .filter((c) => c.status == "aberto")
+                    .map((c) => (
+                      <tr
+                        key={c.id}
+                        className="border-t border-gray-700 hover:bg-[#2f333d] transition"
+                      >
+                        <td className="py-2">{c.created_by}</td>
+                        <td className="py-2">
+                          {c.descricao?.length > MAX_descricao_LENGTH ? (
+                            <>
+                              {c.descricao.substring(0, MAX_descricao_LENGTH)}...
+                              <button
+                                className="text-blue-400 hover:underline ml-1"
+                                onClick={() => handleOpenModal("details", c)}
+                              >
+                                Ver mais
+                              </button>
+                            </>
+                          ) : (
+                            c.descricao
+                          )}
+                        </td>
+                        <td className="py-2">{`${new Date(c.criado_em).toLocaleDateString('pt-BR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                        })} às ${new Date(c.criado_em).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}`}</td>
+                        <td className="py-2">
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-semibold ${c.status === "Aberto"
                               ? "bg-red-500/20 text-red-400"
                               : c.status === "Em Andamento"
                                 ? "bg-yellow-500/20 text-yellow-400"
                                 : c.status === "Concluído"
                                   ? "bg-green-500/20 text-green-400"
                                   : "bg-gray-500/20 text-gray-400"
-                            }`}
-                        >
-                          {c.status}
-                        </span>
-                      </td>
-                      <td className="py-2 flex gap-2 justify-end">
-                        <button
-                          className="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs"
-                          onClick={() => handleOpenModal("details", c)}
-                        >
-                          Ver
-                        </button>
-                        <button
-                          className="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs"
-                          onClick={() => handleOpenModal("edit", c)}
-                        >
-                          Editar
-                        </button>
-                        <button
-                          className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-xs"
-                          onClick={() => openDeleteConfirm(c)}
-                        >
-                          Deletar
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                              }`}
+                          >
+                            {c.status}
+                          </span>
+                        </td>
+                        <td className="py-2 flex gap-2 justify-end">
+                          <button
+                            className="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white text-xs"
+                            onClick={() => handleOpenModal("details", c)}
+                          >
+                            Ver
+                          </button>
+                          <button
+                            className="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs"
+                            onClick={() => handleOpenModal("edit", c)}
+                          >
+                            Editar
+                          </button>
+                          <button
+                            className="px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-white text-xs"
+                            onClick={() => openDeleteConfirm(c)}
+                          >
+                            Deletar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
