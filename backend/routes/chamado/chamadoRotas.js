@@ -32,7 +32,7 @@ router.get('/chamados/:id', async (req, res) => {
 });
 
 // DELETE
-router.delete('/DeletarChamados/:id', async (req, res) => {
+router.delete('/chamados/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (id <= 0) {
@@ -50,7 +50,7 @@ router.delete('/DeletarChamados/:id', async (req, res) => {
 });
 
 // POST
-router.post('/CriarChamados', async (req, res) => {
+router.post('/chamados', async (req, res) => {
   try {
     const chamadoData = req.body;
 
@@ -72,7 +72,7 @@ router.post('/CriarChamados', async (req, res) => {
 });
 
 // PUT
-router.put('/AtualizarChamado/:id', async (req, res) => {
+router.put('/chamado/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id) || id <= 0) {

@@ -83,7 +83,7 @@ export default function ChamadosUsuarioTable({
           <div key={chamado.id} className="border rounded-lg p-2 bg-gray-100 shadow text-xs">
             <div className="flex justify-between font-semibold text-gray-800">
               <span>ID: #{chamado.id}</span>
-              <span>{new Date(chamado.dataCriacao).toLocaleDateString('pt-BR')}</span>
+              <span>{new Date(chamado.criado_em).toLocaleDateString('pt-BR')}</span>
             </div>
             <div className="mt-1 text-gray-600"><strong>Descrição:</strong> {chamado.descricao}</div>
             <div className="mt-1 text-gray-600"><strong>Tipo:</strong> {chamado.tipo}</div>

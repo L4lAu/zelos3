@@ -40,7 +40,7 @@ export default function TecnicoPage() {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:8080/chamados/listar", {
+        const response = await fetch("http://localhost:3001/pool", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -102,18 +102,6 @@ export default function TecnicoPage() {
   }
 
 
-  if (loading) {
-    return (
-      // Fundo escuro, texto claro e logo em destaque
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#1e2128] text-gray-300 font-sans gap-3">
-        <p className="text-sm uppercase tracking-widest">Instituição</p>
-        <div className="bg-white text-[#1e2128] font-extrabold tracking-widest px-4 py-2 rounded-md shadow-lg">
-          SENAI
-        </div>
-      </div>
-    );
-  }
-
   // Caso usuário não exista
   if (!user) {
     return (
@@ -125,6 +113,11 @@ export default function TecnicoPage() {
       </div>
     );
   }
+  const handleLogout = () => {
+    router.push("/"); // redireciona para página de login
+    localStorage.removeItem("token");
+    localStorage.removeItem("user"); // remove usuário do localStorage
+  };
 
   // --- Layout Principal da Aplicação ---
   return (
@@ -132,10 +125,7 @@ export default function TecnicoPage() {
     <div className="min-h-screen bg-[#282c34] text-gray-300 flex flex-col">
       {user && (
         <Header
-          user={user}
-          onLogout={() => console.log("Logout")}
-          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-        />
+          user={user} onLogout={handleLogout}/>
       )}
 
       <div className="flex flex-1 overflow-hidden">

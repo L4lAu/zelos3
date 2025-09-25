@@ -129,6 +129,27 @@ export default function UsuarioPage() {
     setErroPatrimonio("");
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen gap-2">
+        <p>INSTITUIÇÃO </p>
+        <div className="bg-white text-red-700 font-extrabold tracking-widest px-3 py-1 rounded-sm">
+          SENAI
+        </div>
+      </div>
+    );
+  }
+
+  // --- Caso usuário não exista ---
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Usuário não encontrado. Faça login novamente.</p>
+      </div>
+    );
+  }
+
+
   return (
     <>
       <div className="min-h-screen bg-[#282c34] text-gray-300 flex flex-col">
