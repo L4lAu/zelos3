@@ -47,7 +47,7 @@ export default function ModalNovoChamado({ isOpen, onClose, onCreate, error }) {
         <div className="mb-4 text-white">
           <label className="block text-white mb-2">Descrição do Problema *</label>
           <textarea
-            placeholder="Descreva o problema em detalhes"
+            placeholder="Descreva o problema em detalhes e informe o numero da sala"
             value={novoChamado.descricao}
             onChange={e => setNovoChamado({...novoChamado, descricao: e.target.value})}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 h-24"
