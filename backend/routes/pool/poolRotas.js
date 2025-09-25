@@ -16,6 +16,7 @@ router.get("/pool", authMiddleware, async (req, res) => {
     try {
         const pool = await listarPool();
         res.json(pool);
+        console.log("pools encontrados: ", pool)
     } catch (error) {
         console.error('Erro na rota GET /pool:', error);
         res.status(500).json({ error: "Erro ao buscar o pool" });

@@ -8,10 +8,11 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import ModalNovoChamado from "../components/usuario/ModalNovoChamados";
 import { verificaPermissao } from "../../utils/auth";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+
 
 export default function ChamadosAdm() {
   const [chamados, setChamados] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("details");
   const [currentChamado, setCurrentChamado] = useState(null);
@@ -24,6 +25,7 @@ export default function ChamadosAdm() {
   const MAX_descricao_LENGTH = 50;
   const [user, setUser] = useState({});
   const [erroPatrimonio, setErroPatrimonio] = useState("");
+  const [loading, setLoading] = useState(true);
   
 
   useEffect(() => {
@@ -62,6 +64,9 @@ export default function ChamadosAdm() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    carregarChamados();
+  }, []);
 
   // 🔹 Proteção de rota
   useEffect(() => {
@@ -315,7 +320,7 @@ export default function ChamadosAdm() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button
-                  onClick={carregarChamados(true)}
+                  onClick={()=>carregarChamados(true)}
                   // Botão com o mesmo estilo do "Novo Chamado"
                   className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors duration-200 text-sm sm:text-base shadow-md w-full sm:w-auto"
                 >
